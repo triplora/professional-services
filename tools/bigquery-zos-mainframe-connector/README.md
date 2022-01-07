@@ -390,6 +390,11 @@ According IBM:
 The USER parameter from the JOB statement, if specified, or
 The user ID from which the job was submitted."
 
+### Google Bucket
+
+The Google bucket is defined on the execution of JCL that calls the BQSH program:
+https://github.com/triplora/professional-services/tree/main/tools/bigquery-zos-mainframe-connector#example-jcl
+
 
 ## Documentation
 
