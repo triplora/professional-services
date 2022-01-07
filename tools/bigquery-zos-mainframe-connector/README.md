@@ -380,7 +380,7 @@ iconv -f EBCDICUS -t UTF-8 BQSH.PROC | tr '\205' '\n' | tr -d '\302' | tr -cd '\
 ```
 
 
-### Notes
+## Notes
 
 [SYSUID](https://www.ibm.com/docs/en/zos/2.4.0?topic=jcl-using-sysuid-system-symbol)
 
