@@ -380,11 +380,9 @@ iconv -f EBCDICUS -t UTF-8 BQSH.PROC | tr '\205' '\n' | tr -d '\302' | tr -cd '\
 ```
 
 
-## Documentation
+### Notes
 
-[Data Set Names](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.idad400/name.htm)
-
-A data set name can be from one to a series of twenty-two joined name segments. Each name segment represents a level of qualification.
+[SYSUID](https://www.ibm.com/docs/en/zos/2.4.0?topic=jcl-using-sysuid-system-symbol)
 
 The dataset for Google Credentials is supported throught BQSH file and uses the `SYSUID system symbol`.
 According IBM:
@@ -392,7 +390,13 @@ According IBM:
 The USER parameter from the JOB statement, if specified, or
 The user ID from which the job was submitted."
 
-[SYSUID](https://www.ibm.com/docs/en/zos/2.4.0?topic=jcl-using-sysuid-system-symbol)
+
+## Documentation
+
+[Data Set Names](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.idad400/name.htm)
+
+A data set name can be from one to a series of twenty-two joined name segments. Each name segment represents a level of qualification.
+
 
 ## Limitations
 
