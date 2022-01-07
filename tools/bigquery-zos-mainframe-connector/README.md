@@ -275,6 +275,7 @@ Usage: rm [options] tablespec
 * [IBM SDK for z/OS, Java Technology Edition, Version 8](https://developer.ibm.com/javasdk/support/zos/)
 * [SBT](https://www.scala-sbt.org/download.html)
 * [pax](https://www.ibm.com/support/knowledgecenter/en/ssw_aix_72/com.ibm.aix.cmds4/pax.htm) (install with `sudo apt install -y pax` on debian)
+* [OPENJDK-1.8](https://openjdk.java.net/install/) (install with `sudo apt install -y openjdk-1.8-jdk` on debian)
 
 ## Development Environment Setup
 
@@ -288,6 +289,15 @@ gunzip -c SDK8_64bit_SR5_FP30.PAX.Z | pax -r
 
 
 ## Building
+Make sure you jdk is pointing to 1.8 version
+```sh
+java -version
+```
+
+If not change it using command bellow
+```sh
+sudo update-alternatives --config java
+```
 
 Build application jar
 
