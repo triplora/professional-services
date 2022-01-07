@@ -295,7 +295,7 @@ Make sure your jdk is pointing to 1.8 version
 java -version
 ```
 
-If not change using command bellow
+If not change it using command bellow
 
 ```sh
 sudo update-alternatives --config java
