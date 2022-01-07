@@ -289,6 +289,18 @@ gunzip -c SDK8_64bit_SR5_FP30.PAX.Z | pax -r
 
 ## Building
 
+Make sure your jdk is pointing to 1.8 version
+
+```sh
+java -version
+```
+
+If not change using command bellow
+
+```sh
+sudo update-alternatives --config java
+```
+
 Build application jar
 
 ```sh
