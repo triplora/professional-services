@@ -384,9 +384,9 @@ iconv -f EBCDICUS -t UTF-8 BQSH.PROC | tr '\205' '\n' | tr -d '\302' | tr -cd '\
 
 [SYSUID](https://www.ibm.com/docs/en/zos/2.4.0?topic=jcl-using-sysuid-system-symbol)
 
-The dataset for Google Credentials is supported throught BQSH file and uses the `SYSUID system symbol`.
+The dataset for Google Credentials is supported throught BQSH file and uses the `SYSUID` system symbol.
 According IBM:
-"The system replaces &SYSUID with the user ID under whose authority the job runs, which is normally one of the following:
+"The system replaces `&SYSUID` with the user ID under whose authority the job runs, which is normally one of the following:
 The USER parameter from the JOB statement, if specified, or
 The user ID from which the job was submitted."
 
