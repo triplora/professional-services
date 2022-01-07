@@ -354,10 +354,35 @@ sbt assemblyPackageDependency
 
 ## Installation
 
-1. Deploy `<userid>.TCPIP.DATA` to configure DNS resolution
+1. Deploy `<userid>.TCPIP.DATA` to configure DNS resolution if ncessary (if you are not using a DNS Server on z/OS to resolve names)
 2. Deploy `<userid>.HOSTS.LOCAL` or `<userid>.ETC.IPNODES` if you need to send API requests to the `restricted.googleapis.com` VPC-SC endpoint.
 3. Deploy `gszutil.dep.jar` and `gszutil.jar` to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator)
-4. Deploy [proclib/BQSH](proclib/BQSH) to a PROCLIB MVS dataset on the mainframe. If you deployed the jar files to a path other than `/opt/google/lib`, you will need to modify `BQSH` to reflect the correct path.
+4. Convert to EBCDIC and Deploy [proclib/BQSH](proclib/BQSH) to a PROCLIB MVS dataset on the mainframe. If you deployed the jar files to a path other than `/opt/google/lib`, you will need to modify `BQSH` to reflect the correct path.
+
+
+## Encoding Conversion
+
+The examples below demonstrate conversion between [EBCDIC](https://www.ibm.com/support/knowledgecenter/zosbasics/com.ibm.zos.zappldev/zappldev_14.htm) and UTF-8.
+
+
+### Convert UTF-8 to EBCDIC
+
+```sh
+iconv -t EBCDICUS -f UTF-8 BQSH > BQSH.PROC
+```
+
+### Convert EBCDIC to UTF-8
+
+```sh
+iconv -f EBCDICUS -t UTF-8 BQSH.PROC | tr '\205' '\n' | tr -d '\302' | tr -cd '\11\12\15\40-\176' > BQSH
+```
+
+
+## Documentation
+
+[Data Set Names](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.idad400/name.htm)
+
+A data set name can be from one to a series of twenty-two joined name segments. Each name segment represents a level of qualification.
 
 
 ## Limitations
