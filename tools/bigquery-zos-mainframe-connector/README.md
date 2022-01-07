@@ -278,13 +278,51 @@ Usage: rm [options] tablespec
 
 ## Development Environment Setup
 
-1. Extract IBM JDK using gunzip and pax
+1. Click on this link to open a Google Cloud Shell with git repository cloned and some tools installed and wait to be completed.
+* [Github] (https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Ftriplora%2Fprofessional-services.git)
+
+2. Go to `tools/bigquery-zos-mainframe-connector` folder using command bellow.
+
+```sh
+cd tools/bigquery-zos-mainframe-connector
+```
+
+3. Create lib folder using command bellow
+
+```sh
+mkdir lib
+```
+
+4. Install pax utility using command bellow
+
+```sh
+sudo apt install -y pax
+```
+
+5. Install SBT utility using commands bellow
+
+```sh
+echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list
+echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt_old.list
+curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add
+sudo apt update
+sudo apt install sbt
+```
+
+6. Extract IBM JDK using gunzip and pax
 
 ```sh
 gunzip -c SDK8_64bit_SR5_FP30.PAX.Z | pax -r
 ```
 
-2. Copy `ibmjzos.jar`, `ibmjcecca.jar` and `dataaccess.jar` to `lib/` at the repository root.
+7. Copy `ibmjzos.jar`, `ibmjcecca.jar` and `dataaccess.jar` from `J8.0_64/lib/` to `lib` folder created before using commands bellow.
+
+```sh
+cp J8.0_64/lib/ibmjzos.jar lib/
+cp J8.0_64/lib/ibmjcecca.jar lib/
+cp J8.0_64/lib/dataaccess.jar lib/
+```
+
 
 
 ## Building
