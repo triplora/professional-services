@@ -358,7 +358,7 @@ sbt assemblyPackageDependency
 2. Deploy `<userid>.HOSTS.LOCAL` or `<userid>.ETC.IPNODES` if you need to send API requests to the `restricted.googleapis.com` VPC-SC endpoint.
 3. Deploy `gszutil.dep.jar` and `gszutil.jar` to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator)
 4. Convert to EBCDIC and Deploy [proclib/BQSH](proclib/BQSH) to a PROCLIB MVS dataset on the mainframe. If you deployed the jar files to a path other than `/opt/google/lib`, you will need to modify `BQSH` to reflect the correct path.
-5. Convert to EBCDIC and Deploy [credentials.json](credentials.json) to `/opt/google/.config/` unix filesystem directory (or directory chosen by your z/OS administrator) .
+5. Deploy [credentials.json](credentials.json) to `/opt/google/.config/` unix filesystem directory (or directory chosen by your z/OS administrator) .
 6. Create 
 
 
