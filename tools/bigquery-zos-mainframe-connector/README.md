@@ -357,7 +357,7 @@ sbt assemblyPackageDependency
 1. Deploy `gszutil.dep.jar` and `gszutil.jar` to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator)
 2. Convert to EBCDIC and Deploy [proclib/BQSH](proclib/BQSH) to a PROCLIB MVS dataset on the mainframe. If you deployed the jar files to a path other than `/opt/google/lib`, you will need to modify `BQSH` to reflect the correct path.
 3. Deploy [credentials.json](credentials.json) to `/opt/google/.config/` unix filesystem directory (or directory chosen by your z/OS administrator).
-4. Create a DATA SET named `KEYFILE` on mainframe and point it to `/opt/google/.config/credentials.json` unix filesystem directory (or directory chosen on the step before).
+4. Create a dataset named `KEYFILE` on mainframe and point it to `/opt/google/.config/credentials.json` unix filesystem directory (or directory chosen on the step before). If you want another name asa `CREDENTIALS` you need to change BQSH file on line 31 to reflect the new name. Example: `//KEYFILE  DD DSN=&SYSUID..CREDENTIALS,DISP=SHR`.
 5. Convert to EBCDIC and Deploy `<userid>.TCPIP.DATA` to configure DNS resolution if ncessary (if you are not using a DNS Server on z/OS to resolve names)
 6. Convert to EBCDIC and Deploy `<userid>.HOSTS.LOCAL` or `<userid>.ETC.IPNODES` if you need to send API requests to the `restricted.googleapis.com` VPC-SC endpoint.
 
@@ -386,6 +386,13 @@ iconv -f EBCDICUS -t UTF-8 BQSH.PROC | tr '\205' '\n' | tr -d '\302' | tr -cd '\
 
 A data set name can be from one to a series of twenty-two joined name segments. Each name segment represents a level of qualification.
 
+The dataset for Google Credentials is supported throught BQSH file and uses the `SYSUID system symbol`.
+According IBM:
+"The system replaces &SYSUID with the user ID under whose authority the job runs, which is normally one of the following:
+The USER parameter from the JOB statement, if specified, or
+The user ID from which the job was submitted."
+
+[SYSUID](https://www.ibm.com/docs/en/zos/2.4.0?topic=jcl-using-sysuid-system-symbol)
 
 ## Limitations
 
