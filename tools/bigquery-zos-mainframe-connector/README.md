@@ -18,7 +18,7 @@ The utility is deployed as a cataloged procedure called by the [JCL EXEC stateme
 ## Development Environment Setup
 
 1. Click on this link to open a Google Cloud Shell with git repository cloned and some tools installed and wait to be completed.
-* [Github] (https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Ftriplora%2Fprofessional-services.git)
+* [Google Cloud Shell] (https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Ftriplora%2Fprofessional-services.git)
 
 2. Go to `tools/bigquery-zos-mainframe-connector` folder using command bellow.
 
