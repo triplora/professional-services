@@ -289,19 +289,13 @@ Usage: rm [options] tablespec
 cd tools/bigquery-zos-mainframe-connector
 ```
 
-3. Create lib folder using command bellow
-
-```sh
-mkdir lib
-```
-
-4. Install pax utility using command bellow
+3. Install pax utility using command bellow
 
 ```sh
 sudo apt install -y pax
 ```
 
-5. Install SBT utility using commands bellow
+4. Install SBT utility using commands bellow
 
 ```sh
 echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list
@@ -309,6 +303,12 @@ echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | sudo tee /etc/apt/sour
 curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add
 sudo apt update
 sudo apt install sbt
+```
+
+5. Create lib folder using command bellow
+
+```sh
+mkdir lib
 ```
 
 6. Extract IBM JDK using gunzip and pax (Also you can copy the jar files from proclib directory on 7.1 step)
