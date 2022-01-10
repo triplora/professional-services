@@ -323,7 +323,11 @@ cp J8.0_64/lib/ext/ibmjcecca.jar lib/
 cp J8.0_64/lib/dataaccess.jar lib/
 ```
 
+8. Remove SDK directory to preserve disk space using command bellow.
 
+```sh
+rm -rf J8.0_64
+```
 
 ## Building
 
