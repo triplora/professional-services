@@ -318,8 +318,8 @@ gunzip -c SDK8_64bit_SR5_FP30.PAX.Z | pax -r
 7. Copy `ibmjzos.jar`, `ibmjcecca.jar` and `dataaccess.jar` from `J8.0_64/lib/` to `lib` folder created before using commands bellow.
 
 ```sh
-cp J8.0_64/lib/ibmjzos.jar lib/
-cp J8.0_64/lib/ibmjcecca.jar lib/
+cp J8.0_64/lib/ext/ibmjzos.jar lib/
+cp J8.0_64/lib/ext/ibmjcecca.jar lib/
 cp J8.0_64/lib/dataaccess.jar lib/
 ```
 
