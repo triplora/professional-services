@@ -7,6 +7,137 @@ It is built using IBM's jzos Java SDK and provides a shell emulator that accepts
 The utility is deployed as a cataloged procedure called by the [JCL EXEC statement](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.ieab100/execst.htm).
 
 
+## Pre-Requisites
+
+* [IBM SDK for z/OS, Java Technology Edition, Version 8](https://developer.ibm.com/javasdk/support/zos/)
+* [SBT](https://www.scala-sbt.org/download.html)
+* [pax](https://www.ibm.com/support/knowledgecenter/en/ssw_aix_72/com.ibm.aix.cmds4/pax.htm) (install with `sudo apt install -y pax` on debian)
+* [Google Account](https://accounts.google.com/signup/v2/webcreateaccount?hl=en&flowName=GlifWebSignIn&flowEntry=SignUp)
+* [gcloud installed on your local machine to copy the compiled jar files](https://cloud.google.com/sdk/docs/quickstart#deb)
+
+## Development Environment Setup
+
+1. Click on this link to open a Google Cloud Shell with git repository cloned and some tools installed and wait to be completed.
+* [Github] (https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Ftriplora%2Fprofessional-services.git)
+
+2. Go to `tools/bigquery-zos-mainframe-connector` folder using command bellow.
+
+```sh
+cd tools/bigquery-zos-mainframe-connector
+```
+
+3. Install pax utility using command bellow
+
+```sh
+sudo apt install -y pax
+```
+
+4. Install SBT utility using commands bellow
+
+```sh
+echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list
+echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt_old.list
+curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add
+sudo apt update
+sudo apt install sbt
+```
+
+5. Create lib folder using command bellow
+
+```sh
+mkdir lib
+```
+
+6. Extract IBM JDK using gunzip and pax (Also you can copy the jar files from proclib directory on 7.1 step)
+
+```sh
+gunzip -c SDK8_64bit_SR5_FP30.PAX.Z | pax -r
+```
+
+7. Copy `ibmjzos.jar`, `ibmjcecca.jar` and `dataaccess.jar` from `J8.0_64/lib/` to `lib` folder created before using commands bellow.
+
+```sh
+cp J8.0_64/lib/ext/ibmjzos.jar lib/
+cp J8.0_64/lib/ext/ibmjcecca.jar lib/
+cp J8.0_64/lib/dataaccess.jar lib/
+```
+
+
+7.1 You can copy files already unzipped from proclib directory using command bellow.
+
+```sh
+cp proclib/ibmjzos.jar lib/
+cp proclib/ibmjcecca.jar lib/
+cp proclib/dataaccess.jar lib/
+```
+
+
+8. Remove SDK directory if you used it to preserve disk space using command bellow.
+
+```sh
+rm -rf J8.0_64
+```
+
+## Building
+
+Make sure your jdk is pointing to 1.8 version
+
+```sh
+java -version
+```
+
+If not change it using command bellow
+
+```sh
+sudo update-alternatives --config java
+```
+
+Build application jar
+
+```sh
+sbt package
+```
+
+Build dependencies jar
+
+```sh
+sbt assemblyPackageDependency
+```
+
+
+## Installation
+
+1. Copy files `gszutil.dep.jar` and `gszutil.jar` from `~/cloudshell_open/professional-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/` to your local machine using command bellow.
+
+```sh
+gcloud alpha cloud-shell scp cloudshell:~/cloud-open/professionla-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/*.jar localhost:~/
+```
+
+2. Deploy files `gszutil.dep.jar` and `gszutil.jar` to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator) using sftp or similar.
+3. Convert to EBCDIC and Deploy [proclib/BQSH](proclib/BQSH) to a PROCLIB MVS dataset on the mainframe. If you deployed the jar files to a path other than `/opt/google/lib`, you will need to modify `BQSH` to reflect the correct path.
+4. Deploy [credentials.json](credentials.json) to `/opt/google/.config/` unix filesystem directory (or directory chosen by your z/OS administrator).
+5. Create a dataset named `KEYFILE` on mainframe and point it to credentials file `/opt/google/.config/credentials.json` (or credentials file inside the directory chosen on the step before). If you want other name like `CREDENTIALS` you need to change BQSH file on line 31 to reflect the new name. Example: `//KEYFILE  DD DSN=&SYSUID..CREDENTIALS,DISP=SHR`.
+6. Convert to EBCDIC and Deploy `<userid>.TCPIP.DATA` to configure DNS resolution if ncessary (if you are not using a DNS Server on z/OS to resolve names)
+7. Convert to EBCDIC and Deploy `<userid>.HOSTS.LOCAL` or `<userid>.ETC.IPNODES` if you need to send API requests to the `restricted.googleapis.com` VPC-SC endpoint.
+
+
+## Encoding Conversion
+
+The examples below demonstrate conversion between [EBCDIC](https://www.ibm.com/support/knowledgecenter/zosbasics/com.ibm.zos.zappldev/zappldev_14.htm) and UTF-8.
+
+
+### Convert UTF-8 to EBCDIC
+
+```sh
+iconv -t EBCDICUS -f UTF-8 BQSH > BQSH.PROC
+```
+
+### Convert EBCDIC to UTF-8
+
+```sh
+iconv -f EBCDICUS -t UTF-8 BQSH.PROC | tr '\205' '\n' | tr -d '\302' | tr -cd '\11\12\15\40-\176' > BQSH
+```
+
 ## Usage
 
 Users can make multiple calls in a single step by entering commands on separate lines or delimited by semicolon (`;`).
@@ -267,138 +398,6 @@ Usage: rm [options] tablespec
   --synchronous_mode <value>
                            If set to true, wait for the command to complete before returning, and use the job completion status as the error code. If set to false, the job is created, and successful completion status is used for the error code. The default value is true.
   --sync <value>           If set to true, wait for the command to complete before returning, and use the job completion status as the error code. If set to false, the job is created, and successful completion status is used for the error code. The default value is true.
-```
-
-
-## Pre-Requisites
-
-* [IBM SDK for z/OS, Java Technology Edition, Version 8](https://developer.ibm.com/javasdk/support/zos/)
-* [SBT](https://www.scala-sbt.org/download.html)
-* [pax](https://www.ibm.com/support/knowledgecenter/en/ssw_aix_72/com.ibm.aix.cmds4/pax.htm) (install with `sudo apt install -y pax` on debian)
-* [Google Account](https://accounts.google.com/signup/v2/webcreateaccount?hl=en&flowName=GlifWebSignIn&flowEntry=SignUp)
-* [gcloud installed on your local machine to copy the compiled jar files](https://cloud.google.com/sdk/docs/quickstart#deb)
-
-## Development Environment Setup
-
-1. Click on this link to open a Google Cloud Shell with git repository cloned and some tools installed and wait to be completed.
-* [Github] (https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Ftriplora%2Fprofessional-services.git)
-
-2. Go to `tools/bigquery-zos-mainframe-connector` folder using command bellow.
-
-```sh
-cd tools/bigquery-zos-mainframe-connector
-```
-
-3. Install pax utility using command bellow
-
-```sh
-sudo apt install -y pax
-```
-
-4. Install SBT utility using commands bellow
-
-```sh
-echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list
-echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt_old.list
-curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add
-sudo apt update
-sudo apt install sbt
-```
-
-5. Create lib folder using command bellow
-
-```sh
-mkdir lib
-```
-
-6. Extract IBM JDK using gunzip and pax (Also you can copy the jar files from proclib directory on 7.1 step)
-
-```sh
-gunzip -c SDK8_64bit_SR5_FP30.PAX.Z | pax -r
-```
-
-7. Copy `ibmjzos.jar`, `ibmjcecca.jar` and `dataaccess.jar` from `J8.0_64/lib/` to `lib` folder created before using commands bellow.
-
-```sh
-cp J8.0_64/lib/ext/ibmjzos.jar lib/
-cp J8.0_64/lib/ext/ibmjcecca.jar lib/
-cp J8.0_64/lib/dataaccess.jar lib/
-```
-
-
-7.1 You can copy files already unzipped from proclib directory using command bellow.
-
-```sh
-cp proclib/ibmjzos.jar lib/
-cp proclib/ibmjcecca.jar lib/
-cp proclib/dataaccess.jar lib/
-```
-
-
-8. Remove SDK directory if you used it to preserve disk space using command bellow.
-
-```sh
-rm -rf J8.0_64
-```
-
-## Building
-
-Make sure your jdk is pointing to 1.8 version
-
-```sh
-java -version
-```
-
-If not change it using command bellow
-
-```sh
-sudo update-alternatives --config java
-```
-
-Build application jar
-
-```sh
-sbt package
-```
-
-Build dependencies jar
-
-```sh
-sbt assemblyPackageDependency
-```
-
-
-## Installation
-
-1. Copy files `gszutil.dep.jar` and `gszutil.jar` from `~/cloudshell_open/professional-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/` to your local machine using command bellow.
-
-```sh
-gcloud alpha cloud-shell scp cloudshell:~/cloud-open/professionla-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/*.jar localhost:~/
-```
-
-2. Deploy files `gszutil.dep.jar` and `gszutil.jar` to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator) using sftp or similar.
-3. Convert to EBCDIC and Deploy [proclib/BQSH](proclib/BQSH) to a PROCLIB MVS dataset on the mainframe. If you deployed the jar files to a path other than `/opt/google/lib`, you will need to modify `BQSH` to reflect the correct path.
-4. Deploy [credentials.json](credentials.json) to `/opt/google/.config/` unix filesystem directory (or directory chosen by your z/OS administrator).
-5. Create a dataset named `KEYFILE` on mainframe and point it to credentials file `/opt/google/.config/credentials.json` (or credentials file inside the directory chosen on the step before). If you want other name like `CREDENTIALS` you need to change BQSH file on line 31 to reflect the new name. Example: `//KEYFILE  DD DSN=&SYSUID..CREDENTIALS,DISP=SHR`.
-6. Convert to EBCDIC and Deploy `<userid>.TCPIP.DATA` to configure DNS resolution if ncessary (if you are not using a DNS Server on z/OS to resolve names)
-7. Convert to EBCDIC and Deploy `<userid>.HOSTS.LOCAL` or `<userid>.ETC.IPNODES` if you need to send API requests to the `restricted.googleapis.com` VPC-SC endpoint.
-
-
-## Encoding Conversion
-
-The examples below demonstrate conversion between [EBCDIC](https://www.ibm.com/support/knowledgecenter/zosbasics/com.ibm.zos.zappldev/zappldev_14.htm) and UTF-8.
-
-
-### Convert UTF-8 to EBCDIC
-
-```sh
-iconv -t EBCDICUS -f UTF-8 BQSH > BQSH.PROC
-```
-
-### Convert EBCDIC to UTF-8
-
-```sh
-iconv -f EBCDICUS -t UTF-8 BQSH.PROC | tr '\205' '\n' | tr -d '\302' | tr -cd '\11\12\15\40-\176' > BQSH
 ```
 
 
