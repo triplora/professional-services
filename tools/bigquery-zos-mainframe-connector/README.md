@@ -437,4 +437,4 @@ Future versions of this utility will provide enhanced offload functionality with
 
 ## Disclaimer
 
-This is not an official Google product. This is a fork from original GoogleProfesisonalServices on Github.
+This is not an official Google product. This was forked by 3RA from original GoogleProfesisonalServices repository on Github.
