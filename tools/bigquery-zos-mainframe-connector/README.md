@@ -370,12 +370,13 @@ sbt assemblyPackageDependency
 
 ## Installation
 
-1. Copy files `gszutil.dep.jar` and `gszutil.jar` from `~/cloudshell_open/professional-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/` to your local machine and Deploy to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator) using command bellow.
+1. Copy files `gszutil.dep.jar` and `gszutil.jar` from `~/cloudshell_open/professional-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/` to your local machine using command bellow.
 
 ```sh
 gcloud alpha cloud-shell scp cloudshell:~/cloud-open/professionla-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/*.jar localhost:~/
 ```
 
+2. Deploy files `gszutil.dep.jar` and `gszutil.jar` to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator) using sftp or similar.
 3. Convert to EBCDIC and Deploy [proclib/BQSH](proclib/BQSH) to a PROCLIB MVS dataset on the mainframe. If you deployed the jar files to a path other than `/opt/google/lib`, you will need to modify `BQSH` to reflect the correct path.
 4. Deploy [credentials.json](credentials.json) to `/opt/google/.config/` unix filesystem directory (or directory chosen by your z/OS administrator).
 5. Create a dataset named `KEYFILE` on mainframe and point it to credentials file `/opt/google/.config/credentials.json` (or credentials file inside the directory chosen on the step before). If you want other name like `CREDENTIALS` you need to change BQSH file on line 31 to reflect the new name. Example: `//KEYFILE  DD DSN=&SYSUID..CREDENTIALS,DISP=SHR`.
