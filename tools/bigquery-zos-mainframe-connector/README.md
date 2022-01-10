@@ -276,6 +276,7 @@ Usage: rm [options] tablespec
 * [SBT](https://www.scala-sbt.org/download.html)
 * [pax](https://www.ibm.com/support/knowledgecenter/en/ssw_aix_72/com.ibm.aix.cmds4/pax.htm) (install with `sudo apt install -y pax` on debian)
 * [Google Account](https://accounts.google.com/signup/v2/webcreateaccount?hl=en&flowName=GlifWebSignIn&flowEntry=SignUp)
+* [gcloud installed on your local machine to copy the compiled jar files](https://cloud.google.com/sdk/docs/quickstart#deb)
 
 ## Development Environment Setup
 
