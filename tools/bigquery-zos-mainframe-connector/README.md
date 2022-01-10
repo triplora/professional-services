@@ -370,7 +370,7 @@ sbt assemblyPackageDependency
 
 ## Installation
 
-1. Copy files `gszutil.dep.jar` and `gszutil.jar` from `~/cloudshell_open/professional-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/` and Deploy to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator) using command bellow.
+1. Copy files `gszutil.dep.jar` and `gszutil.jar` from `~/cloudshell_open/professional-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/` to your local machine and Deploy to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator) using command bellow.
 
 ```sh
 gcloud alpha cloud-shell scp cloudshell:~/cloud-open/professionla-services/tools/bigquery-zos-mainframe-connector/target/scala-2.11/*.jar localhost:~/
