@@ -310,7 +310,7 @@ sudo apt update
 sudo apt install sbt
 ```
 
-6. Extract IBM JDK using gunzip and pax
+6. Extract IBM JDK using gunzip and pax (Also you can copy the jar files from proclib directory on 7.1 step)
 
 ```sh
 gunzip -c SDK8_64bit_SR5_FP30.PAX.Z | pax -r
@@ -324,7 +324,17 @@ cp J8.0_64/lib/ext/ibmjcecca.jar lib/
 cp J8.0_64/lib/dataaccess.jar lib/
 ```
 
-8. Remove SDK directory to preserve disk space using command bellow.
+
+7.1 You can copy files already unzipped from proclib directory using command bellow.
+
+```sh
+cp proclib/ibmjzos.jar lib/
+cp proclib/ibmjcecca.jar lib/
+cp proclib/dataaccess.jar lib/
+```
+
+
+8. Remove SDK directory if you used it to preserve disk space using command bellow.
 
 ```sh
 rm -rf J8.0_64
