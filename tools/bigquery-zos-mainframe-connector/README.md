@@ -275,6 +275,7 @@ Usage: rm [options] tablespec
 * [IBM SDK for z/OS, Java Technology Edition, Version 8](https://developer.ibm.com/javasdk/support/zos/)
 * [SBT](https://www.scala-sbt.org/download.html)
 * [pax](https://www.ibm.com/support/knowledgecenter/en/ssw_aix_72/com.ibm.aix.cmds4/pax.htm) (install with `sudo apt install -y pax` on debian)
+* [Google Account](https://accounts.google.com/signup/v2/webcreateaccount?hl=en&flowName=GlifWebSignIn&flowEntry=SignUp)
 
 ## Development Environment Setup
 
@@ -358,7 +359,7 @@ sbt assemblyPackageDependency
 
 ## Installation
 
-1. Deploy `gszutil.dep.jar` and `gszutil.jar` to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator)
+1. Deploy `gszutil.dep.jar` and `gszutil.jar` from `target/scala to `/opt/google/lib` unix filesystem directory (or directory chosen by your z/OS administrator)
 2. Convert to EBCDIC and Deploy [proclib/BQSH](proclib/BQSH) to a PROCLIB MVS dataset on the mainframe. If you deployed the jar files to a path other than `/opt/google/lib`, you will need to modify `BQSH` to reflect the correct path.
 3. Deploy [credentials.json](credentials.json) to `/opt/google/.config/` unix filesystem directory (or directory chosen by your z/OS administrator).
 4. Create a dataset named `KEYFILE` on mainframe and point it to credentials file `/opt/google/.config/credentials.json` (or credentials file inside the directory chosen on the step before). If you want another name like `CREDENTIALS` you need to change BQSH file on line 31 to reflect the new name. Example: `//KEYFILE  DD DSN=&SYSUID..CREDENTIALS,DISP=SHR`.
